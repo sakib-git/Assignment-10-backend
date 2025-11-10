@@ -29,7 +29,13 @@ async function run() {
   try {
     await client.connect();
    
-
+ const db = client.db('assignment-db')
+ const billCollection = db.collection('Bills')
+ 
+ app.get('/bills', async (req, res) => {
+  const reuslt = await billCollection.find().toArray()
+  res.send(reuslt)
+ })
 
 
 
