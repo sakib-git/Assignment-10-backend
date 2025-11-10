@@ -2,7 +2,7 @@ const express = require('express')
 const cors = require('cors')
 require('dotenv').config();
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express()
 const port = 3000
 
@@ -37,6 +37,13 @@ async function run() {
   res.send(reuslt)
  })
 
+ app.get('/bills-details/:id', async (req, res) => {
+  const {id}  = req.params
+  const objectId = new ObjectId(id)
+  const reuslt = await billCollection.findOne({_id : objectId})
+
+  res.send(reuslt)
+ })
 
 
 
