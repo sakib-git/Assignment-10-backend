@@ -30,7 +30,7 @@ async function run() {
 
     const db = client.db('assignment-db');
     const billCollection = db.collection('Bills');
-    const categoryCollection = db.collection('category');
+    const payCollection = db.collection('pay')
 
     app.get('/bills', async (req, res) => {
       const category = req.query.category;
@@ -58,6 +58,27 @@ async function run() {
       res.send(reuslt);
     });
 
+    app.get('/paybillpersonal', async (req, res) => {
+      const userEmail = req.query.email
+      const result = await payCollection.find({created_by : userEmail}).toArray()
+      res.send(result)
+    })
+
+    app.post('/paybill', async (req, res) => {
+      const data = req.body
+      const result = await payCollection.insertOne(data)
+      res.send({result})
+    
+    })
+
+    app.put('/paybill/:id', async(req, res) => {
+      const {id} = req.params
+      const objectId = new ObjectId(id)
+      const data = req.body
+      const result = await payCollection.updateOne()
+
+      res.send(result)
+    })
     await client.db('admin').command({ ping: 1 });
     console.log('Pinged your deployment. You successfully connected to MongoDB!');
   } finally {
