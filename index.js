@@ -71,14 +71,36 @@ async function run() {
     
     })
 
-    app.put('/paybill/:id', async(req, res) => {
-      const {id} = req.params
-      const objectId = new ObjectId(id)
-      const data = req.body
-      const result = await payCollection.updateOne()
+    // app.put('/paybill/:id', async(req, res) => {
+    //   const {id} = req.params
+    //   const objectId = new ObjectId(id)
+    //   const data = req.body
+    //   const result = await payCollection.updateOne()
 
-      res.send(result)
-    })
+    //   res.send({
+    //     result
+    //   })
+    // })
+
+    app.put('/paybill/:id', async (req, res) => {
+  const id = req.params.id;
+  const data = req.body;
+  const objectId = new ObjectId(id);
+
+  const result = await payCollection.updateOne(
+    { _id: objectId },
+    { $set: data }
+  );
+
+  res.send(result);
+});
+
+app.delete('/paybill/:id', async (req, res) => {
+  const {id} = req.params;
+  const result = await payCollection.deleteOne({_id : new ObjectId(id)})
+  res.send({result})
+})
+
     await client.db('admin').command({ ping: 1 });
     console.log('Pinged your deployment. You successfully connected to MongoDB!');
   } finally {
