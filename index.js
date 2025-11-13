@@ -37,7 +37,6 @@ async function run() {
       if (category) {
         const allBills = await billCollection.find().toArray();
         const categoryBasedBills = allBills.filter((bill) => bill.category.toLowerCase() === category);
-        console.log();
         res.send(categoryBasedBills);
         return;
       }
