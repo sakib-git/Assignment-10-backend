@@ -1,8 +1,29 @@
 {
+  "name": "assignment-10-server",
+  "version": "1.0.0",
+  "main": "index.js",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "mongodb": "^7.0.0"
-  }
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sakib-git/Assignment-10-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sakib-git/Assignment-10-backend/issues"
+  },
+  "homepage": "https://github.com/sakib-git/Assignment-10-backend#readme",
+  "description": ""
 }
