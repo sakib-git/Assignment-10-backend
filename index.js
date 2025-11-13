@@ -24,7 +24,7 @@ const client = new MongoClient(uri, {
   },
 });
 
-async function run() {
+async function run(callback) {
   try {
     await client.connect();
 
@@ -100,10 +100,17 @@ async function run() {
 
       res.send(result);
     });
-  } finally {
+    callback(null);
+  } catch (err) {
+    callback(err);
   }
 }
-app.listen(PORT, async () => {
-  await run().catch(console.dir);
-  console.log(`server listening on port ${PORT}`);
-});
+
+run((err) => {
+  app.listen(PORT, async () => {
+    if (err) {
+      console.log('MongoDB connection failed');
+    }
+    console.log(`server listening on port ${PORT}`);
+  });
+}).catch(console.dir);
