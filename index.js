@@ -13,7 +13,7 @@ app.get('/', (req, res) => {
   res.send('Hello World!');
 });
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@mongodb.0ps5adl.mongodb.net/?appName=MongoDB`;
+const uri = process.env.MONGODB_URI;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -30,7 +30,7 @@ async function run() {
 
     const db = client.db('assignment-db');
     const billCollection = db.collection('Bills');
-    const payCollection = db.collection('pay')
+    const payCollection = db.collection('pay');
 
     app.get('/bills', async (req, res) => {
       const category = req.query.category;
@@ -59,53 +59,45 @@ async function run() {
     });
 
     app.get('/paybillpersonal', async (req, res) => {
-      const userEmail = req.query.email
-      const result = await payCollection.find({created_by : userEmail}).toArray()
-      res.send(result)
-    })
+      const userEmail = req.query.email;
+      const result = await payCollection.find({ created_by: userEmail }).toArray();
+      res.send(result);
+    });
 
     app.post('/paybill', async (req, res) => {
-      const data = req.body
-      const result = await payCollection.insertOne(data)
-      res.send({result})
-    
-    })
-
-    // app.put('/paybill/:id', async(req, res) => {
-    //   const {id} = req.params
-    //   const objectId = new ObjectId(id)
-    //   const data = req.body
-    //   const result = await payCollection.updateOne()
-
-    //   res.send({
-    //     result
-    //   })
-    // })
+      const data = req.body;
+      const result = await payCollection.insertOne(data);
+      res.send({ result });
+    });
 
     app.put('/paybill/:id', async (req, res) => {
-  const id = req.params.id;
-  const data = req.body;
-  const objectId = new ObjectId(id);
+      const id = req.params.id;
+      const data = req.body;
+      const objectId = new ObjectId(id);
 
-  const result = await payCollection.updateOne(
-    { _id: objectId },
-    { $set: data }
-  );
+      const result = await payCollection.updateOne({ _id: objectId }, { $set: data });
 
-  res.send(result);
-});
+      res.send(result);
+    });
 
-app.delete('/paybill/:id', async (req, res) => {
-  const {id} = req.params;
-  const result = await payCollection.deleteOne({_id : new ObjectId(id)})
-  res.send({result})
-})
+    app.delete('/paybill/:id', async (req, res) => {
+      const { id } = req.params;
+      const result = await payCollection.deleteOne({ _id: new ObjectId(id) });
+      res.send({ result });
+    });
 
-    await client.db('admin').command({ ping: 1 });
-    console.log('Pinged your deployment. You successfully connected to MongoDB!');
+    app.get('/search', async (req, res) => {
+      const searchText = req.query.search;
+
+      const result = await billCollection
+        .find({
+          title: { $regex: searchText, $options: 'i' },
+        })
+        .toArray();
+
+      res.send(result);
+    });
   } finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
   }
 }
 run().catch(console.dir);
