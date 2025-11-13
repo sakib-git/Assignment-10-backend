@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.send('Server for assignment-10');
 });
 
 const uri = process.env.MONGODB_URI;
