@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
@@ -26,7 +26,10 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
+
+    await client.db('admin').command({ ping: 1 });
+    console.log('MongoDB connected successfully!');
 
     const db = client.db('assignment-db');
     const billCollection = db.collection('Bills');
@@ -100,8 +103,7 @@ async function run() {
   } finally {
   }
 }
-run().catch(console.dir);
-
-app.listen(port, () => {
-  console.log(`server listening on port ${port}`);
+app.listen(PORT, async () => {
+  await run().catch(console.dir);
+  console.log(`server listening on port ${PORT}`);
 });
