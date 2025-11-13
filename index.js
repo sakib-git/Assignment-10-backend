@@ -37,6 +37,7 @@ async function run() {
       if (category) {
         const allBills = await billCollection.find().toArray();
         const categoryBasedBills = allBills.filter((bill) => bill.category.toLowerCase() === category);
+        console.log();
         res.send(categoryBasedBills);
         return;
       }
@@ -46,7 +47,7 @@ async function run() {
     });
 
     app.get('/latest-bills', async (req, res) => {
-      const result = await billCollection.find().sort({ date: -1 }).limit(6).toArray();
+      const result = await billCollection.find().limit(6).toArray();
       res.send(result);
     });
 
